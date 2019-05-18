@@ -56,4 +56,24 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  // might refactor later. validate body?
+  try {
+    const project = await Projects.update(req.params.id, req.body);  
+
+    if (project) {
+      res.status(200).json(project);
+    } else {
+      res.status(404).json({ message: 'The project could not be found' });
+    }
+  } catch (error) {
+    // log error to server
+    console.log(error);
+    res.status(500).json({
+      message: 'Error updating the project',
+    });
+  }
+
+});
+
 module.exports = router;
