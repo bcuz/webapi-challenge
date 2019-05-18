@@ -1,7 +1,6 @@
 let app = new Vue({
   el: '#app',
   data: {
-    title: 'Vue!',
     project: {
       name: '',
       description: ''
