@@ -21,7 +21,7 @@ router.get('/:id', validateProjectId, async (req, res) => {
   res.json(req.project);  
 });
 
-router.get('/:id/actions', async (req, res) => {
+router.get('/:id/actions', validateProjectId, async (req, res) => {
   // might refactor later. id
   try {
     const actions = await Projects.getProjectActions(req.params.id);
@@ -60,16 +60,13 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
-  // might refactor later. validate body?
+router.put('/:id', validateProjectId, async (req, res) => {
+  // validate body? length of body
   try {
     const project = await Projects.update(req.params.id, req.body);  
 
-    if (project) {
-      res.status(200).json(project);
-    } else {
-      res.status(404).json({ message: 'The project could not be found' });
-    }
+    res.status(200).json(project);
+
   } catch (error) {
     // log error to server
     console.log(error);
@@ -80,16 +77,12 @@ router.put('/:id', async (req, res) => {
 
 });
 
-router.delete('/:id', async (req, res) => {
-  // might refactor later.
+router.delete('/:id', validateProjectId, async (req, res) => {
   try {
-    let removed = await Projects.remove(req.params.id);    
     
-    if (removed) {
-      res.status(200).json({ message: 'The project has been nuked' });
-    } else {
-      res.status(404).json({ message: 'The project could not be found' });
-    }
+    await Projects.remove(req.params.id);    
+    res.status(200).json({ message: 'The project has been nuked' });
+    
   } catch (error) {
     // log error to server
     console.log(error);
