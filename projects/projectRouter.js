@@ -36,6 +36,25 @@ router.get('/:id', async (req, res) => {
   }  
 });
 
+router.get('/:id/actions', async (req, res) => {
+  // might refactor later. id
+  try {
+    const actions = await Projects.getProjectActions(req.params.id);
+
+    if (actions.length > 0) {
+      res.status(200).json(actions);
+    } else {
+      res.status(404).json({ message: 'no actions not found' });
+    }
+  } catch (error) {
+    // log error to server
+    console.log(error);
+    res.status(500).json({
+      message: "Error retrieving the project's actions",
+    });
+  }
+});
+
 router.post('/', async (req, res) => {
   // might refactor later
   let { name, description } = req.body;
