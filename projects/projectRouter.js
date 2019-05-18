@@ -62,6 +62,10 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', validateProjectId, async (req, res) => {
   // validate body? length of body
+  if(Object.keys(req.body).length === 0){
+    res.status(400).json({message: "missing data"});
+  }
+
   try {
     const project = await Projects.update(req.params.id, req.body);  
 
