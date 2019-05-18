@@ -17,4 +17,23 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  // might refactor later
+  try {
+    const project = await Projects.get(req.params.id);  
+
+    if (project) {
+      res.status(200).json(project);
+    } else {
+      res.status(404).json({ message: 'project not found' });
+    }
+  } catch (error) {
+    // log error to server
+    console.log(error);
+    res.status(500).json({
+      message: 'Error retrieving the project',
+    });
+  }  
+});
+
 module.exports = router;
