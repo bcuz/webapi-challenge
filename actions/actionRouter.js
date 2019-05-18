@@ -1,6 +1,7 @@
 const express = require('express');;
 
 const Actions = require('../data/helpers/actionModel.js');
+const Projects = require('../data/helpers/projectModel.js');
 
 const router = express.Router();
 
@@ -34,6 +35,41 @@ router.get('/:id', async (req, res) => {
       message: 'Error retrieving the action',
     });
   }  
+});
+
+router.post('/', async (req, res) => {
+  let { project_id, description, notes } = req.body;
+
+  if (!project_id || !description || !notes) {    
+    return res.status(400).json({ message: "Please provide project id, description, and notes for the action." });
+  }
+
+  try {
+    const project = await Projects.get(project_id);  
+
+    if (project) {
+      
+      try {
+        const action = await Actions.insert(req.body);
+        res.status(201).json(action);
+      } catch (error) {
+        // log error to server
+        console.log(error);
+        res.status(500).json({
+          message: 'Error adding the action',
+        });
+      }
+    } else {
+      res.status(404).json({ message: 'project not found' });
+    }
+  } catch (error) {
+    // log error to server
+    console.log(error);
+    res.status(500).json({
+      message: 'Error retrieving the project',
+    });
+  }  
+  
 });
 
 module.exports = router;
