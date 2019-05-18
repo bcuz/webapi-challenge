@@ -17,23 +17,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
-  // might refactor later
-  try {
-    const project = await Projects.get(req.params.id);  
-
-    if (project) {
-      res.status(200).json(project);
-    } else {
-      res.status(404).json({ message: 'project not found' });
-    }
-  } catch (error) {
-    // log error to server
-    console.log(error);
-    res.status(500).json({
-      message: 'Error retrieving the project',
-    });
-  }  
+router.get('/:id', validateProjectId, async (req, res) => {
+  res.json(req.project);  
 });
 
 router.get('/:id/actions', async (req, res) => {
@@ -113,5 +98,20 @@ router.delete('/:id', async (req, res) => {
     });
   }
 });
+
+async function validateProjectId(req, res, next) {
+  try {
+    const project = await Projects.get(req.params.id);
+
+    if (project) {
+      req.project = project
+      next()
+    } else {
+      res.status(404).json({ message: 'project not found; invalid id' });
+    }    
+    } catch (err) {
+      res.status(500).json({ message: 'failed to process request' });    
+    }
+};
 
 module.exports = router;
