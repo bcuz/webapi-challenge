@@ -1,14 +1,20 @@
-/*
-play this: https://www.youtube.com/watch?v=d-diB65scQU
+const express = require('express'); // importing a CommonJS module
+const server = express();
+const cors = require('cors');
 
-Sing along:
+const projectRouter = require('./projects/projectRouter.js');
+const actionRouter = require('./actions/actionRouter.js');
 
-here's a little code I wrote, you might want to read it really slow, don't worry be happy
-in every line there may be trouble, but if you worry you make it double, don't worry, be happy
-ain't got no sense of what is REST? just concentrate on learning Express, don't worry, be happy
-your file is getting way too big, bring a Router and make it thin, don't worry, be crafty
-there is no data on that route, just write some code, you'll sort it out… don't worry, just API…
-I need this code, just don't know where, perhaps should make some middleware, don't worry, be happy
+server.use(express.json());
+server.use(cors())
 
-Go code!
-*/
+server.use('/projects', projectRouter);
+server.use('/actions', actionRouter);
+
+server.get('/', (req, res) => {
+  res.send(`<h2>hi!</h2>`)
+});
+
+server.listen(5001, () => {
+  console.log('\n* Server Running on http://localhost:5001 *\n');
+});
