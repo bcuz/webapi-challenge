@@ -22,14 +22,13 @@ router.get('/:id', validateProjectId, async (req, res) => {
 });
 
 router.get('/:id/actions', validateProjectId, async (req, res) => {
-  // might refactor later. id
   try {
     const actions = await Projects.getProjectActions(req.params.id);
 
     if (actions.length > 0) {
       res.status(200).json(actions);
     } else {
-      res.status(404).json({ message: 'no actions not found' });
+      res.status(404).json({ message: 'no actions found' });
     }
   } catch (error) {
     // log error to server
